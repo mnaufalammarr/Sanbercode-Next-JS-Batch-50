@@ -1,3 +1,4 @@
+
 export default function Footer() {
-    return <div>Footer</div>
+    return <div className="text-3xl font-bold underline">Footer</div>
     }
