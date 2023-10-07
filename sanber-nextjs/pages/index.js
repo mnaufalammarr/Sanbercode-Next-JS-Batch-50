@@ -1,18 +1,13 @@
-import Head from "next/head";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import Layout from "@/layout";
 
 export default function Home() {
  return (
   <div>
-   <Head>
-    <title>{`Create Next App `}</title>
-  
-    <link rel="icon" href="/favicon.ico" />
-   </Head>
-   <Header />
-   <p >Content</p>
-   <Footer />
+<Layout>
+    <h1>Home</h1>
+    <p>Ini adalah halaman Home</p>
+</Layout>
+
   </div>
  );
 }
