@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 export default function UserByName() {
     const router = useRouter();
-    const { id } = router.query;
+    const { id } = router.query; 
     return (
     <div>
       <Layout
