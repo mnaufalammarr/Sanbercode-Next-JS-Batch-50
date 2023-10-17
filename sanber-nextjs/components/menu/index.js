@@ -16,6 +16,9 @@ export default function Menu() {
         <li>
           <Link href="/users/detail">User Detail</Link>
         </li>
+        <li>
+          <Link href="/notes">Notes</Link>
+        </li>
       </ul>
     </div>
   );
