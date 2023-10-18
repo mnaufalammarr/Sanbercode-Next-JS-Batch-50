@@ -1,36 +1,84 @@
 import dynamic from "next/dynamic";
-import Link from "next/link";
+import {
+  Box,
+  Flex,
+  Grid,
+  GridItem,
+  Card,
+  CardBody,
+  CardHeader,
+  CardFooter,
+  Text,
+  Button,
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useEffect , useState } from "react";
 
 const LayoutComponent = dynamic(() => import("@/layout"));
 
-export default function Notes({ notes }) {
-  console.log(notes);
+export default function Notes() {
+  const router = useRouter();
+  const [Notes, setNotes] = useState([]);
+  useEffect(() => {
+    async function fetchingData() {
+      const res = await fetch(
+        "https://paace-f178cafcae7b.nevacloud.io/api/notes"
+      );
+      const listNotes = await res.json();
+
+      setNotes(listNotes.data);
+    }
+    fetchingData();
+  }, []);
   return (
     <div>
       <LayoutComponent
         metaTitle="Notes"
         metaDescription="Ini adalah halaman Notes"
       >
-        {
-            notes.data.map((note) => (
-                <Link href={`/notes/${note.id}`} key={note.id}>
-                   
-                        <h1>{note.title}</h1>
-                   
-                </Link>
-            
-            ))
-        }
+        <Box padding="5">
+          <Flex justifyContent="end">
+            <Button colorScheme="blue" onClick={()=> router.push("/notes/add")}>Add Note</Button>
+          </Flex>
+        <Flex>
+          <Grid
+            templateColumns="repeat(3, 1fr)"
+            gap={6}
+            w="100%"
+            p={5}
+            m="auto"
+          >
+            {Notes.map((note) => (
+              <GridItem key={note.id}>
+                <Card>
+                  <CardHeader>
+                    <Text fontSize="xl" fontWeight="bold">
+                      {note.title}
+                    </Text>
+                  </CardHeader>
+                  <CardBody>
+                    <Text>{note.description}</Text>
+                  </CardBody>
+                  <CardFooter>
+                    <Button flex="1" variant="ghost">Edit</Button>
+                    <Button flex="1" colorScheme="red">Delete</Button>
+                  </CardFooter>
+                </Card>
+              </GridItem>
+            ))}
+          </Grid>
+        </Flex>
+        </Box>
       </LayoutComponent>
     </div>
   );
 }
 
-export async function getStaticProps() {
-  const res = await fetch("https://paace-f178cafcae7b.nevacloud.io/api/notes");
-  const notes = await res.json();
-  return {
-    props: { notes },
-    revalidate : 10,
-  };
-}
+// export async function getStaticProps() {
+//   const res = await fetch("https://paace-f178cafcae7b.nevacloud.io/api/notes");
+//   const notes = await res.json();
+//   return {
+//     props: { notes },
+//     revalidate : 10,
+//   };
+// }
