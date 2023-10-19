@@ -19,6 +19,21 @@ const LayoutComponent = dynamic(() => import("@/layout"));
 export default function Notes() {
   const router = useRouter();
   const [Notes, setNotes] = useState([]);
+  const HandleDelete = async (id) => {
+    try {
+      const response = await fetch(
+        `https://paace-f178cafcae7b.nevacloud.io/api/notes/delete/${id}`,{
+          method: "DELETE"
+        }
+      )
+      const result = await response.json();
+      if(result?.success){
+        router.reload();
+      }
+    } catch (error) {
+      
+    }
+  }
   useEffect(() => {
     async function fetchingData() {
       const res = await fetch(
@@ -60,8 +75,8 @@ export default function Notes() {
                     <Text>{note.description}</Text>
                   </CardBody>
                   <CardFooter>
-                    <Button flex="1" variant="ghost">Edit</Button>
-                    <Button flex="1" colorScheme="red">Delete</Button>
+                    <Button onClick={()=> router.push(`/notes/edit/${note.id}`)} flex="1" variant="ghost">Edit</Button>
+                    <Button onClick={() => HandleDelete(note?.id)} flex="1" colorScheme="red">Delete</Button>
                   </CardFooter>
                 </Card>
               </GridItem>
