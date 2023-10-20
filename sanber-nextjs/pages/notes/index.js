@@ -13,17 +13,20 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { useQueries } from "@/hooks/useQueries";
 import { useMutation } from "@/hooks/useMutation";
+import useSWR from "swr";
+import fetcher from "@/utils/fetcher";
 
 const LayoutComponent = dynamic(() => import("@/layout"));
 
 export default function Notes() {
   const { mutate } = useMutation();
-  const { data, isLoading } = useQueries({
-    prefixUrl: "https://paace-f178cafcae7b.nevacloud.io/api/notes",
-  });
+  // const { data, isLoading } = useQueries({
+  //   prefixUrl: "",
+  // });
+  const { data, error, isLoading } = useSWR("https://paace-f178cafcae7b.nevacloud.io/api/notes", fetcher , {revalidateOnFocus: true})
   const router = useRouter();
   // const [Notes, setNotes] = useState([]);
   const HandleDelete = async (id) => {
@@ -109,7 +112,7 @@ export default function Notes() {
               p={5}
               m="auto"
             >
-              {data?.map((note) => (
+              {data?.data?.map((note) => (
                 <GridItem key={note.id}>
                   <Card>
                     <CardHeader>
