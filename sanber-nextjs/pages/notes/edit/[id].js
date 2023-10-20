@@ -16,35 +16,48 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useMutation } from "@/hooks/useMutation";
 
 const LayoutComponent = dynamic(() => import("@/layout"));
 
 export default function EditNotes() {
+  const { mutate } = useMutation();
   const router = useRouter();
   const { id } = router.query;
   const [Notes, setNotes] = useState();
 
   const HandleSubmit = async (event) => {
-    try {
-      const response = await fetch(
-        `https://paace-f178cafcae7b.nevacloud.io/api/notes/update/${id}`,{
-          method: "PATCH",
-          body: JSON.stringify({
-            title: Notes?.title,
-            description: Notes?.description,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      const result = await response.json();
-      if(result?.success){
-        router.push("/notes")
+    const response = await mutate({
+      url: `https://paace-f178cafcae7b.nevacloud.io/api/notes/update/${id}`,
+      method: "PATCH",
+      payload: {
+        title: Notes?.title,
+        description: Notes?.description,
       }
-    } catch (error) {
-      
+    })
+    if(response?.success){
+      router.push("/notes")
     }
+    // try {
+    //   const response = await fetch(
+    //     `https://paace-f178cafcae7b.nevacloud.io/api/notes/update/${id}`,{
+    //       method: "PATCH",
+    //       body: JSON.stringify({
+    //         title: Notes?.title,
+    //         description: Notes?.description,
+    //       }),
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   )
+    //   const result = await response.json();
+    //   if(result?.success){
+    //     router.push("/notes")
+    //   }
+    // } catch (error) {
+      
+    // }
   }
   useEffect(() => {
     async function fetchingData() {
